@@ -1,0 +1,20 @@
+set(handles.sl_time, 'Enable', 'off');
+set(handles.pb_Calc, 'Enable', 'off');
+set(handles.pb_PlayX1, 'Enable', 'off');
+set(handles.pb_PlayX10, 'Enable', 'off');
+set(handles.pb_PlayX100, 'Enable', 'off');
+set(handles.pb_PlayX1000, 'Enable', 'off');
+
+set(handles.pb_open_axes_Rsva, 'Enable', 'off');
+set(handles.pb_open_axes_Rao, 'Enable', 'off');
+set(handles.pb_open_axes_xozo, 'Enable', 'off');
+set(handles.pb_open_axes_Delta1, 'Enable', 'off');
+set(handles.pb_open_axes_ErrPhi, 'Enable', 'off');
+set(handles.pb_open_axes_xsvysvzsv, 'Enable', 'off');
+set(handles.pb_open_axes_Complex, 'Enable', 'off');
+set(handles.pb_open_axes_Period, 'Enable', 'off');
+set(handles.pb_open_axes_SkyView, 'Enable', 'off');
+set(handles.pb_open_axes_3D, 'Enable', 'off');
+set(handles.pb_open_axes_Angle, 'Enable', 'off');
+set(handles.pb_open_axes_Earth, 'Enable', 'off');
+set(handles.pb_open_axes_Ro, 'Enable', 'off');
