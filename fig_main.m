@@ -22,7 +22,7 @@ function varargout = fig_main(varargin)
 
 % Edit the above text to modify the response to help fig_main
 
-% Last Modified by GUIDE v2.5 28-May-2011 18:39:32
+% Last Modified by GUIDE v2.5 01-Jul-2011 20:55:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -112,7 +112,13 @@ read_edits(handles);
 lt = length(t);
 
 xa = 0; ya = l; za = h; % Координаты антенны в местной СК
-Xa = [xa; ya; za]; 
+Xa = [xa; ya; za]; % Центр базовой линии
+
+lb = 3; %m Половина отрезка базовой линии
+alpha_base = deg2rad(30); %deg Угло поворота базовой линии в горизонтальной плоскости
+Xbase = lb*[cos(alpha_base); -sin(alpha_base); 0];
+Xa1 = Xa + Xbase; % Координаты первой антенны
+Xa2 = Xa - Xbase; % Координаты второй антенны
 
 Re = 6371000; %Средний радиус Земли по данными Википедии
 
@@ -134,39 +140,42 @@ for i = 1:lt
     scr_true_signal_blocked_by_a_screen; % Блокируется ли луч экраном
     tg_alpha_sv = sqrt( (xsv(i) - xa).^2 + (ysv(i) - ya).^2 ) ./ (za - zsv(i));
     sat_above_the_skyline(i) = (tg_alpha_sv > tg_alpha) + (tg_alpha_sv <= 0); % Спутник выше горизонта
+        sat_above_the_skyline1(i) = (tg_alpha_sv > tg_alpha) + (tg_alpha_sv <= 0); % Пока так
+        sat_above_the_skyline2(i) = (tg_alpha_sv > tg_alpha) + (tg_alpha_sv <= 0); % Пока так
     direct_signal_is(i) = sat_above_the_skyline(i) * (~true_signal_blocked_by_a_screen(i));
+        direct_signal_is1(i) = sat_above_the_skyline1(i) * (~true_signal_blocked_by_a_screen1(i));    
+        direct_signal_is2(i) = sat_above_the_skyline2(i) * (~true_signal_blocked_by_a_screen2(i));   
     direct_signal_received(i) = direct_signal_is(i) * (zsv(i) > za);
+        direct_signal_received1(i) = direct_signal_is1(i) * (zsv(i) > Xa1(3));
+        direct_signal_received2(i) = direct_signal_is2(i) * (zsv(i) > Xa2(3));
     
     Rsva(i) = norm(Xsv - Xa);
+        Rsva1(i) = norm(Xsv - Xa1);
+        Rsva2(i) = norm(Xsv - Xa2);
     Rc2(i) = ya^2*(Rsva(i)^2/ysv(i)^2 - 1);
+        Rc2_1(i) = Xa1(2)^2*(Rsva1(i)^2/ysv(i)^2 - 1);
+        Rc2_2(i) = Xa2(2)^2*(Rsva2(i)^2/ysv(i)^2 - 1);
     Rao(i) = abs(ya*Rsva(i)/ysv(i));
+        Rao1(i) = abs(Xa1(2)*Rsva1(i)/ysv(i));
+        Rao2(i) = abs(Xa2(2)*Rsva2(i)/ysv(i));
     xo(i) = ( xsv(i) + xa*Rsva(i)/Rao(i) ) / (1 + Rsva(i)/Rao(i));
     zo(i) = ( zsv(i) + za*Rsva(i)/Rao(i) ) / (1 + Rsva(i)/Rao(i));     Xo = [xo(i); 0; zo(i)];
-%     cos_gamma(i) = ((xo(i) - xa)*(xsv(i)-xa) + (0 - ya)*(ysv(i)-ya) + (zo(i) - za)*(zsv(i)-za) ) / Rao(i) / Rsva(i);
-%     Delta2(i) = Rao(i) * (1 - cos_gamma(i));
-    Delta1(i) = norm(Xo - Xsv) + Rao(i) - Rsva(i); j = sqrt(-1);
+        xo1(i) = ( xsv(i) + Xa1(1)*Rsva1(i)/Rao1(i) ) / (1 + Rsva1(i)/Rao1(i));
+        zo1(i) = ( zsv(i) + Xa1(3)*Rsva1(i)/Rao1(i) ) / (1 + Rsva1(i)/Rao1(i));     Xo1 = [xo1(i); 0; zo1(i)];
+        xo2(i) = ( xsv(i) + Xa2(1)*Rsva2(i)/Rao2(i) ) / (1 + Rsva2(i)/Rao2(i));
+        zo2(i) = ( zsv(i) + Xa2(3)*Rsva2(i)/Rao2(i) ) / (1 + Rsva2(i)/Rao2(i));     Xo2 = [xo2(i); 0; zo2(i)];
+
+    Delta1(i) = norm(Xo - Xsv) + Rao(i) - Rsva(i); 
+        Delta1_1(i) = norm(Xo1 - Xsv) + Rao1(i) - Rsva1(i); 
+        Delta1_2(i) = norm(Xo2 - Xsv) + Rao2(i) - Rsva2(i); 
     Amp_Ref(i) = 0.75*ro(Delta1(i));
+        Amp_Ref1(i) = 0.75*ro(Delta1_1(i));
+        Amp_Ref2(i) = 0.75*ro(Delta1_2(i)); j = sqrt(-1);
     ErrPhi(i) = rad2deg( angle(1 + Amp_Ref(i)*exp(j*(2*pi*Delta1(i)/0.2))) );
+        ErrPhi1(i) = rad2deg( angle(1 + Amp_Ref1(i)*exp(j*(2*pi*Delta1_1(i)/0.2))) );
+        ErrPhi2(i) = rad2deg( angle(1 + Amp_Ref2(i)*exp(j*(2*pi*Delta1_2(i)/0.2))) );
     
-    if ( (xo(i)<Screen_Width_l)&&(xo(i)>(-Screen_Width_r))&& ...
-            (zo(i)>=0)&&(zo(i)<=Screen_Hight) ) && (ysv(i) > 0) && ...
-            direct_signal_is(i)
-        ref_signal_is(i) = 1;
-        if (zo(i) > za)
-            ref_signal_received(i) = 1;
-        else
-            ref_signal_received(i) = 0;
-        end
-    else
-        ref_signal_is(i) = 0;
-        ref_signal_received(i) = 0;
-        Delta1(i) = NaN;
-        ErrPhi(i) = NaN;
-        xo(i) = NaN;
-        zo(i) = NaN;
-        Rao(i) = NaN;
-        Rc2(i) = NaN;
-    end
+    scr_IsRef;
     
     scr_SkyView;
     
@@ -268,8 +277,8 @@ else
     hA = handles.axes_Rsva;
     set(hA, 'FontSize', Font_Size);
 end
-plot(hA, t, Rsva)
-hold(hA, 'on'); plot(hA, t(nt), Rsva(nt), '*'); hold(hA, 'off');
+plot(hA, t, Rsva, t, Rsva1, t, Rsva2)
+hold(hA, 'on'); plot(hA, t(nt), Rsva(nt), '*', t(nt), Rsva1(nt), '*', t(nt), Rsva2(nt), '*'); hold(hA, 'off');
 grid(hA, 'on');
 xlabel(hA, 't, s');
 ylabel(hA, 'R_{SVA}, m');
@@ -291,8 +300,8 @@ else
     hA = handles.axes_Rao;
     set(hA, 'FontSize', Font_Size);        
 end
-plot(hA, t, Rao, 'r')
-hold(hA, 'on'); plot(hA, t(nt), Rao(nt), 'r*'); hold(hA, 'off');
+plot(hA, t, Rao, t, Rao1, t, Rao2)
+hold(hA, 'on'); plot(hA, t(nt), Rao(nt), '*', t(nt), Rao1(nt), '*', t(nt), Rao2(nt), '*'); hold(hA, 'off');
 grid(hA, 'on');
 xlabel(hA, 't, s');
 ylabel(hA, 'R_{AO}, m');
@@ -319,16 +328,15 @@ else
     hA = handles.axes_xozo;
     set(hA, 'FontSize', Font_Size);    
 end
-plot(hA, xo, zo, 'r', x_scr, z_scr, 'k')
+plot(hA, xo, zo, xo1, zo1, xo2, zo2,  x_scr, z_scr, 'k')
 hold(hA, 'on'); 
-plot(hA, xo(nt), zo(nt), 'r*');
-plot(hA, xpr(nt), zpr(nt), 'b*'); 
+plot(hA, xo(nt), zo(nt), '*', xo1(nt), zo1(nt), '*', xo2(nt), zo2(nt), '*');
 hold(hA, 'off');
 grid(hA, 'on');    
 xlabel(hA, 'x_O, m');
 ylabel(hA, 'z_O, m');
 if hF
-    legend(hA, 'Reflection point', 'Screen')
+    legend(hA, 'Reflection point O', 'Reflection point 1', 'Reflection point 2', 'Screen')
 end
 title(hA, 'Point on the screen');
 
@@ -348,8 +356,8 @@ else
     hA = handles.axes_Delta1;
     set(hA, 'FontSize', Font_Size);
 end
-plot(hA, t, Delta1)
-hold(hA, 'on'); plot(hA, nt, Delta1(nt), '*'); hold(hA, 'off');
+plot(hA, t, Delta1, t, Delta1_1, t, Delta1_2)
+hold(hA, 'on'); plot(hA, nt, Delta1(nt), '*', nt, Delta1_1(nt), '*', nt, Delta1_2(nt), '*'); hold(hA, 'off');
 grid(hA, 'on');    
 xlabel(hA, 't, s');
 ylabel(hA, '\Delta_{MP}, m');
@@ -550,11 +558,15 @@ x_circle = cos(pc)*sqrt(Rc2(nt)) + xa;
 z_circle = sin(pc)*sqrt(Rc2(nt)) + za; z_circle = z_circle.*(z_circle>0);
 y_circle = zeros(1, length(pc));
 
+% Центр базовой линии
+graph_a_x = [0 0 ];
+graph_a_y = [ya ya ];
+graph_a_z = [0 za ];
 
-% Антенна
-graph_a_x = [0 0 0.2 -0.2 0 0 0 0];
-graph_a_y = [ya ya ya ya ya ya+0.2 ya-0.2 ya];
-graph_a_z = [0 za za+0.2 za+0.2 za za+0.2 za+0.2 za];
+%Базовая линии
+Base_line_x = [Xa1(1) Xa2(1)];
+Base_line_y = [Xa1(2) Xa2(2)];
+Base_line_z = [Xa1(3) Xa2(3)];
 
 % Прямой сигнал
 if direct_signal_is(nt)
@@ -588,9 +600,9 @@ end
     xlim1 = -masht;
     xlim2 = masht;
     ylim1 = -0.1*masht;
-    ylim2 = masht;
+    ylim2 = 2*masht;
     zlim1 = -0.1*masht;
-    zlim2 = masht;    
+    zlim2 = 2*masht;    
 
 % Wall
 wall_r = min([Screen_Width_r, abs(xlim1)]);
@@ -612,7 +624,9 @@ end
           true_signal_x, true_signal_y, true_signal_z, 'b', ... % Прямой сигнал
           wall_x, wall_y, wall_z, 'k', ... % Экран
           MP_inc_beam_x, MP_inc_beam_y, MP_inc_beam_z, 'r', ... % Падающий луч
-          MP_ref_beam_x, MP_ref_beam_y, MP_ref_beam_z, 'r'); % Отраженный луч
+          MP_ref_beam_x, MP_ref_beam_y, MP_ref_beam_z, 'r', ... % Отраженный луч
+          Base_line_x, Base_line_y, Base_line_z, 'k*', ... % Антенны
+          Base_line_x, Base_line_y, Base_line_z, 'k'); % Базовая линия
     grid(hA, 'on');
     xlabel(hA, 'x');
     ylabel(hA, 'y');
@@ -1019,3 +1033,30 @@ if get(hObject, 'Value') == 1
     set(handles.pb_PlayX1000, 'Value', 0);
 end
 scr_widg_on;
+
+
+% --- Executes on button press in pb_Lock.
+function pb_Lock_Callback(hObject, eventdata, handles)
+
+
+
+function ed_Tlock_Callback(hObject, eventdata, handles)
+% hObject    handle to ed_Tlock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of ed_Tlock as text
+%        str2double(get(hObject,'String')) returns contents of ed_Tlock as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function ed_Tlock_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ed_Tlock (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

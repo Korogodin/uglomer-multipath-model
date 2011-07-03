@@ -3,20 +3,26 @@
 %> @author Корогодин И.В.
 %> @date   24 May 2011
 
-global Xa Xsv Xo
-global xo yo zo xpr zpr
+global Xa Xa1 Xa2 Xsv Xo
+global xo yo zo xo1 yo1 zo1 xo2 yo2 zo2 xpr zpr
 global xsv ysv zsv
 global xa ya za
-global l h Tmod t0 t nt lambda
+global l h Tmod t0 t nt lambda Tlock Tc c_light
 global Rsva Rao Delta1 ErrPhi Rc2 Re Amp_Ref
+global Rsva1 Rao1 Delta1_1 ErrPhi1 Rc2_1 Amp_Ref1
+global Rsva2 Rao2 Delta1_2 ErrPhi2 Rc2_2 Amp_Ref2
 global Screen_Width_l Screen_Width_r Screen_Hight
 global Sky_y Sky_x Ekr_y Ekr_x RefBeam_x RefBeam_y Alpha_o Alpha_sv Alpha_sv_0
-global sat_above_the_skyline true_signal_blocked_by_a_screen
-global direct_signal_is direct_signal_received
-global ref_signal_is ref_signal_received
+global sat_above_the_skyline sat_above_the_skyline1 sat_above_the_skyline2 
+global true_signal_blocked_by_a_screen true_signal_blocked_by_a_screen1 true_signal_blocked_by_a_screen2
+global direct_signal_is direct_signal_is1 direct_signal_is2 
+global direct_signal_received direct_signal_received1 direct_signal_received2
+global ref_signal_is ref_signal1_is ref_signal_is2 
+global ref_signal_received ref_signal_received1 ref_signal_received2
 global camz Font_Size
 global T1 T2 T3 T4 T5
 global size_T1 size_T2 size_T3 size_T4 size_T5
+global t_lock s_t_lock Phase0_int OmegaPhase0_int Psi_int Delta1_0_int Phi_m0_int Psi_m_int A_IQ
 hF_Rsva = 1;
 hF_Rao = 2;
 hF_xozo = 3;
