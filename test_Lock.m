@@ -3,7 +3,7 @@ clc
 % set(handles.ed_Tlock, 'Enabled', 'off');
 drawnow
 % Tlock = fix(str2double(get(handles.ed_Tlock, 'String')));
-Tlock = 7000;
+Tlock = 1000;
 if (Tlock < 2)
     Tlock = 30;
 %     set(handles.ed_Tlock, 'String', num2str(Tlock));
