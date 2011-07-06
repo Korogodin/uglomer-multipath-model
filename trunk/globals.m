@@ -22,17 +22,32 @@ global ref_signal_received ref_signal_received1 ref_signal_received2
 global camz Font_Size
 global T1 T2 T3 T4 T5
 global size_T1 size_T2 size_T3 size_T4 size_T5
-global t_lock s_t_lock Phase0_int OmegaPhase0_int Psi_int Delta1_0_int Phi_m0_int Psi_m_int A_IQ
+global t_lock s_t_lock Phase0_int Delta1_0_int t_lock_1 t_lock_end nt_lock
+global Psi_int psi_extr_j ErrPsi 
+global Psi_m_int psi_m_extr_j ErrPsi_m 
+global Phi_m0_int phi_m0_extr_j ErrPhi_m0 
+global A_IQ qcno_dB qcno k_real k_est
 hF_Rsva = 1;
 hF_Rao = 2;
 hF_xozo = 3;
 hF_Delta1 = 4;
 hF_ErrPhi = 5;
 hF_xsvysvzsv = 6;
-hF_Complex = 7;
+hF_Complex1 = 7;
 hF_Period = 8;
 hF_SkyView = 9;
 hF_3D = 10;
 hF_Angle = 11;
 hF_Earth = 12;
-hF_Ro = 13;
+hF_Ro1 = 13;
+hF_Complex2 = 14;
+hF_Ro2 = 15;
+hF_Psi_est = 16;
+hF_Psi_err = 17;
+hF_Psi_m_est = 18;
+hF_Psi_m_err = 19;
+hF_Phi_m0_est = 20;
+hF_Phi_m0_err = 21;
+hF_Ud_psi = 22;
+hF_Ud_psi_m = 23;
+hF_Ud_phi_m0 = 24;

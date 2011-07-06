@@ -20,5 +20,11 @@ direct_signal_is = nan(1, lt); direct_signal_is1 = nan(1, lt); direct_signal_is2
 direct_signal_received = nan(1, lt); direct_signal_received1 = nan(1, lt); direct_signal_received2 = nan(1, lt); % Приходит на антенну выше нулевого угла места
 ref_signal_is = nan(1, lt); ref_signal_is1 = nan(1, lt); ref_signal_is2 = nan(1, lt); % Аналогично с отраженным
 ref_signal_received = nan(1, lt); ref_signal_received1 = nan(1, lt); ref_signal_received2 = nan(1, lt); % 
-Amp_Ref = nan(1,lt); Amp_Ref1 = nan(1,lt); Amp_Ref2 = nan(1,lt); % Ослабление отраженного сигнала относительно прямого на входе антенны
+Amp_Ref = nan(1,lt); Amp_Ref1 = nan(1,lt); Amp_Ref2 = nan(1,lt); % Ослабление отраженного сигнала относительно прямого на выходе коррелятора
+t_lock = NaN; nt_lock = zeros(1,Tmod);
+psi_extr_j = NaN; Psi_int = NaN; ErrPsi = NaN;
+psi_m_extr_j = NaN; Psi_m_int = NaN; ErrPsi_m = NaN;
+phi_m0_extr_j = NaN; Phi_m0_int = NaN; ErrPhi_m0 = NaN;
+
 Font_Size = 8;
+lambda = 2.98e8 / 1.57542e9;

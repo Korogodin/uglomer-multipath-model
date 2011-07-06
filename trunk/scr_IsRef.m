@@ -17,7 +17,9 @@
         Rao(i) = NaN;
         Rc2(i) = NaN;
     end
-    
+    if ref_signal_received(i) == 0
+        Amp_Ref(i) = 0;
+    end
 
     if ( (xo1(i)<Screen_Width_l)&&(xo1(i)>(-Screen_Width_r))&& ...
             (zo1(i)>=0)&&(zo1(i)<=Screen_Hight) ) && (ysv(i) > 0) && ...
@@ -38,6 +40,10 @@
         Rao1(i) = NaN;
         Rc2_1(i) = NaN;
     end    
+    if ref_signal_received1(i) == 0
+        Amp_Ref1(i) = 0;
+    end
+
     
 
     if ( (xo2(i)<Screen_Width_l)&&(xo2(i)>(-Screen_Width_r))&& ...
@@ -59,3 +65,7 @@
         Rao2(i) = NaN;
         Rc2_2(i) = NaN;
     end    
+    if ref_signal_received2(i) == 0
+        Amp_Ref2(i) = 0;
+    end
+    
