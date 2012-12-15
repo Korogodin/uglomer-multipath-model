@@ -5,7 +5,7 @@ function varargout = fig_main(varargin)
 %
 %      H = FIG_MAIN returns the handle to a new FIG_MAIN or the handle to
 %      the existing singleton*.
-%
+%ia/
 %      FIG_MAIN('CALLBACK',hObject,eventData,handles,...) calls the local
 %      function named CALLBACK in FIG_MAIN.M with the given input arguments.
 %
@@ -393,13 +393,14 @@ else
     hA = handles.axes_ErrPhi;
     set(hA, 'FontSize', Font_Size);
 end
-plot(hA, t, ErrPhi); 
+dErrPhi = ErrPhi2 - ErrPhi1;
+plot(hA, t, dErrPhi); 
 hold(hA, 'on');
-plot(hA, nt, ErrPhi(nt), '*');
+plot(hA, nt, dErrPhi(nt), '*');
 hold(hA, 'off');
 grid(hA, 'on');    
 xlabel(hA, 't, s');
-ylabel(hA, '\Delta\phi_{MP}, deg');    
+ylabel(hA, '\Delta\psi_{MP}, deg');    
 title(hA, 'Multipath phase error');
 
 
@@ -544,7 +545,8 @@ grid(hA, 'on');
 function plot_axes_Period(handles, hF)
 globals;
 
-signErrPhi = ((ErrPhi > 0) - 0.5)*2;
+dErrPhi = ErrPhi2 - ErrPhi1;
+signErrPhi = ((dErrPhi > 0) - 0.5)*2;
 
 lt = length(t);
 ErrPeriod = nan(1,lt);
